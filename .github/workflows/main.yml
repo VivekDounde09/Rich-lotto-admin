@@ -27,17 +27,17 @@ jobs:
 
       - name: Install PEM file
         env:
-          PEM_FILE_BASE64: ${{ secrets.PEM_FILE_BASE64 }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "$PEM_FILE_BASE64" | base64 -d > ~/.ssh/id_rsa
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
       - name: Add SSH key to known hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
 
       - name: Deploy frontend
         env:
