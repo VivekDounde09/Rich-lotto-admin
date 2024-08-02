@@ -25,18 +25,19 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      - name: Install PEM file
+      - name: Install private SSH key
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "$EC2_SSH_KEY" > ~/.ssh/id_rsa
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-      - name: Add SSH key to known hosts
+      - name: Add server's public SSH key to known hosts
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
         run: |
+          mkdir -p ~/.ssh
           ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
 
       - name: Deploy frontend
